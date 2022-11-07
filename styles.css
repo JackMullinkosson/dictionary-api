@@ -1,0 +1,47 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 350px;
+}
+
+#vertical-line {
+  width: 45px;
+  transform: rotate(90deg);
+  border-color: purple;
+  position: absolute;
+  display: none;
+}
+
+.word:hover {
+  background-color: yellow;
+  border: 0.1px solid black;
+}
+
+.infoBox {
+  width: 250px;
+  height: 250px;
+  padding: 10px;
+  background: antiquewhite;
+  border-radius: 10px;
+  border: 0.5px solid black;
+  position: absolute;
+  align-items: space-between;
+  flex-wrap: wrap;
+  display: none;
+}
+
+.infoBox span {
+  padding: 2px;
+}
+
+.infoBoxButton {
+  width: 35%;
+  height: 15%;
+  margin: 1rem;
+  align-self: flex-end;
+}
+
+#translation {
+  flex-basis: 100%;
+}

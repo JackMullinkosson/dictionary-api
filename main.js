@@ -1,24 +1,29 @@
 
-    var verbs = [];
-    //seperate words into own elements  
-    var $div = $('.book');
-    var divWords = $div.text().split(' ');
-    $div.empty();
-    $.each(divWords, function(i,w){
-    $('<span class="word"/>').text(w).appendTo($div).append(' ');
+var verbs = [];
+
+//seperate words into own elements  
+var $div = $('.book');
+var divWords = $div.text().split(' ');
+$div.empty();
+$.each(divWords, function(i,w){
+$('<span class="word"/>').text(w).appendTo($div).append(' ');
     });
-    const words = [];
     
-    //info box variables
-    var $word = $('.word');
-    var $verticalLine = $('#vertical-line');
-    var $infoBox = $('.infoBox');
-    $infoBox.css('display','none');
-    var $currentWord = $('#currentWord');
-    $currentWord.append(' ');
+
+var sampleSentence;
+var author;
+var partOfSpeech;
+var wordInfo;     
+
+//info box variables
+var $word = $('.word');
+var $verticalLine = $('#vertical-line');
+var $infoBox = $('.infoBox');
+var $currentWord = $('#currentWord');
+$currentWord.append(' ');
    
-    //get info box on hover
-    $word.hover(
+//get info box on hover
+$word.hover(
       function(e){
       var elem = e.target.getBoundingClientRect();
       $verticalLine.css('top', elem.top - 32 + 'px');
@@ -35,30 +40,62 @@
       }
     )
 
-    getWordInfo = (e) => {
+function getWordInfo(e){
         let highlightedWord=e.target.textContent.replace(/[^\w\s]/g,"").trim()
-        highlightedWord = highlightedWord.charAt(0).toUpperCase() +highlightedWord.slice(1)
-        $currentWord.text(highlightedWord)
+        capitalizedHighlightedWord = highlightedWord.charAt(0).toUpperCase() +highlightedWord.slice(1)
         getSentence(highlightedWord)
+        getPartOfSpeech(highlightedWord)
+        wordInfo = {
+            word: capitalizedHighlightedWord,
+            translation: 'english',
+            qualifier: 'qualifier',
+            infinitive: 'infinitive',
+        }
+        
+        renderWordInfo()
+       
     }
 
-   
-function showSentence(data){
-    console.log(data)
-    var shortest = data.reduce((a, b)=>{
-        return a.sentence.length <= b.sentence.length ? a : b;
-    })
-    $('#sampleSentence').html(shortest.sentence)
+
+function renderWordInfo(){
+    var source = $('#template').html()
+        var template = Handlebars.compile(source)
+        var newHTML = template(wordInfo)
+        $('.infoBox').html(newHTML)
 }
 
-    var getSentence = function (word) {
-    
+//get and set shortest sentence
+function showSentence(data, word){
+    var shortest = data.reduce((a, b)=>{
+        return a.sentence.length <= b.sentence.length ? a : b;
+    }) 
+    var splitUp = shortest.sentence.split(' ')
+    var index = splitUp.indexOf(word.toLowerCase())
+    var boldWord = splitUp.slice(index,index+1)
+    var firstPart = splitUp.slice(0, index).join(' ')
+    var secondPart = splitUp.slice(index+1, splitUp.length).join(' ')
+    console.log(secondPart)
+    wordInfo['firstPart'] = firstPart
+    wordInfo['boldWord'] = boldWord
+    wordInfo['secondPart'] = secondPart
+    wordInfo['author'] = shortest.author
+    renderWordInfo();
+}
+
+
+function showPartOfSpeech(data){
+    partOfSpeech=data[0].partOfSpeech.split(' ')
+    wordInfo['partOfSpeech'] = '(' + partOfSpeech[0] + ')'
+    renderWordInfo();
+}
+
+var getSentence = function (word) {
         $.ajax({
           method: "GET",
-          url: "https://significado.herokuapp.com/v2/frases/" + word +'"',
+          url: "https://significado.herokuapp.com/v2/frases/" + word,
           dataType: "json",
           success: function(data) {
-            showSentence(data)
+            showSentence(data, word)
           },
           error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus);
@@ -66,4 +103,18 @@ function showSentence(data){
         });
       };
 
-   
+var getPartOfSpeech = function (word) {
+        $.ajax({
+          method: "GET",
+          url: "https://significado.herokuapp.com/v2/" + word,
+          dataType: "json",
+          success: function(data) {
+            showPartOfSpeech(data)
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+          }
+        });
+      };
+
+    

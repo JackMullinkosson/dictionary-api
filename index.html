@@ -9,19 +9,21 @@
   <div class="book">
     Um dia Pedrinho vai acordar. Depois ele vai sair para andar pelo pomar.
   </div>
-  <div class="infoBox">
-    <span id="currentWord">Current Word </span>
-    <span id="partOfSpeech">(v.) </span>
-    <span id="qualifier"> (Preterito Imperfeito)</span><br />
-    <span id="translation">English</span> <br />
-    <span id="infinitive">Infinitive: Verb</span> <br />
-    <span id="sampleSentence"
-      >"This is a sample sentence in which this word is used."</span
-    >
-
-    <br /><button class="infoBoxButton">Conjugation table</button
-    ><button class="infoBoxButton">Add to study list</button>
-  </div>
-
+  <div class="infoBox"></div>
+  <script id="template" type="text/x-handlebars-template">
+    <span id="currentWord">{{word}}</span>
+    <span id="partOfSpeech">{{partOfSpeech}} </span>
+    <span id="translation">{{translation}}</span>
+    <br />
+    <span id="sampleSentence">Sentence:
+      {{firstPart}}
+      <strong>{{boldWord}}</strong>
+      {{secondPart}}</span>
+    <span id="author">{{author}}</span>
+    <hr class="divider" />
+    <button class="infoBoxButton">Conjugation table</button>
+    <button class="infoBoxButton">Add to study list</button>
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
   <script src="main.js"></script>
 </body>

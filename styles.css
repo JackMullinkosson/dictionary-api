@@ -45,3 +45,9 @@ body {
 #translation {
   flex-basis: 100%;
 }
+
+.divider {
+  width: 100%;
+  color: antiquewhite;
+  border: none;
+}
